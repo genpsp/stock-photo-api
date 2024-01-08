@@ -1,0 +1,8 @@
+CREATE TABLE images (
+  id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  title      VARCHAR(100) NOT NULL,
+  url        VARCHAR(255) NOT NULL,
+  created_at DATETIME  NOT NULL DEFAULT now(),
+  updated_at DATETIME  NOT NULL DEFAULT now(),
+  PRIMARY KEY (id)
+);
