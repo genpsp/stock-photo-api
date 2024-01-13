@@ -63,6 +63,10 @@ migrate-create:
 migrate-create-seed:
 	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir src/migration/seed/local -seq ${NAME}
 
+.PHONY: swagger-generate
+swagger-generate:
+	docker exec ${APP_CONTAINER_NAME} swag init --parseDependency --parseInternal
+
 .PHONY: test
 test:
 	docker-compose exec app go test -v ./...

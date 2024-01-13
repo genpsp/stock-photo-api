@@ -10,6 +10,9 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+// @title StockPhoto API Documents
+// @version 1.0
+// @description StockPhoto API ドキュメント
 func main() {
 	config := config.LoadConfig()
 
