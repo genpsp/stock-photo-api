@@ -1,18 +1,30 @@
-# 手順
+# StockPhoto API
 
-## ローカル開発用GCPキーの配置
+画像共有サービスWebバックエンド
 
-プロジェクトルートに　```stock-photo-test-gcp-key.json```を作成し、下記のシークレットの中身をコピペする
+## 構築手順
+
+### ローカル開発用GCPキーの配置
+
+プロジェクトルートに `stock-photo-test-gcp-key.json` を作成し、下記リンク先のシークレットの中身をコピペする
+
+```
+$ touch stock-photo-test-gcp-key.json
+```
 
 [LOCAL_GCP_KEY](https://console.cloud.google.com/security/secret-manager/secret/LOCAL_GCP_KEY/versions?hl=ja&project=stock-photo-test)
 
-プロジェクトルートの　```.env.local```に下記のシークレットの中身をコピペする
+プロジェクトルートに `.env.local` を作成し、下記リンク先のシークレットの中身をコピペする
+
+```
+$ touch .env.local
+```
 
 [ENV_LOCAL](https://console.cloud.google.com/security/secret-manager/secret/ENV_LOCAL/versions?hl=ja&project=stock-photo-test)
 
-## 初期化コマンド実行
+### 初期化コマンド実行
 
 dockerが起動している状態で下記コマンドを実行する
 ```
-make init
+$ make init
 ```
