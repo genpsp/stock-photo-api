@@ -37,5 +37,5 @@ go.work
 
 # Others
 tmp/*
-.env.local
+src/tmp/*
 *key.json
