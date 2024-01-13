@@ -23,8 +23,6 @@ func NewMySQLConfig(env env.Env) MySQL {
 	switch env.Env {
 	case "dev", "stg", "prd":
 		DBHost = fmt.Sprintf("unix(/cloudsql/%s)", DBInstanceID)
-	default:
-		DBHost = fmt.Sprintf("tcp(%s)", DBHost)
 	}
 
 	return MySQL{

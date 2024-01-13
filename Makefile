@@ -16,7 +16,6 @@ TEST_DB_URL := "mysql://user:password@tcp(${DB_CONTAINER_NAME}:${DB_PORT})/${TES
 .PHONY: init
 init:
 	@make up
-	sleep 25
 	@make local-db-create
 	@make migrate-up
 	@make logs
