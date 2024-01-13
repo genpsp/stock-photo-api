@@ -36,6 +36,7 @@ go.work
 *.vsix
 
 # Others
+.env*
 tmp/*
-src/tmp/*
+*/tmp/*
 *key.json
