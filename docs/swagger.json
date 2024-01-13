@@ -1,0 +1,51 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "StockPhoto API ドキュメント",
+        "title": "StockPhoto API Documents",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/images/upload": {
+            "post": {
+                "description": "リクエストされた画像をGCSにアップロードする",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "images"
+                ],
+                "summary": "画像アップロード",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "画像ファイル",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "echo.HTTPError": {
+            "type": "object",
+            "properties": {
+                "message": {}
+            }
+        }
+    }
+}
