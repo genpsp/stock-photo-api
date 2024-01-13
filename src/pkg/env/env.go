@@ -11,6 +11,7 @@ type Env struct {
 	DBUsername   string
 	DBPassword   string
 	DBInstanceID string
+	DBHost       string
 	DebugMode    bool
 	MaxOpenConns int
 	MaxIdleConns int
@@ -27,6 +28,7 @@ func NewEnv() Env {
 		DBUsername:   os.Getenv("DB_USER_NAME"),
 		DBPassword:   os.Getenv("DB_PASSWORD"),
 		DBInstanceID: os.Getenv("DB_INSTANCE_ID"),
+		DBHost:       os.Getenv("DB_HOST"),
 		DebugMode:    debugMode,
 		MaxOpenConns: maxOpenConns,
 		MaxIdleConns: maxIdleConns,
