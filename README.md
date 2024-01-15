@@ -1,6 +1,6 @@
 # StockPhoto API
 
-画像共有サービスWebバックエンド
+画像共有サービスWebバックエンド (Go)
 
 ## 構築手順
 
@@ -29,4 +29,4 @@ dockerが起動している状態で下記コマンドを実行する
 $ make init
 ```
 
-起動が成功すると http://localhost:8000 でAPIにアクセスできる
+起動したら http://localhost:8000 でAPIにアクセス
