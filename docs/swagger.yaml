@@ -12,22 +12,27 @@ paths:
   /api/images/upload:
     post:
       consumes:
-      - multipart/form-data
+        - multipart/form-data
       description: リクエストされた画像をGCSにアップロードする
       parameters:
-      - description: 画像ファイル
-        in: formData
-        name: file
-        required: true
-        type: file
+        - description: 画像タイトル
+          in: formData
+          name: title
+          type: string
+          required: true
+        - description: 画像ファイル
+          in: formData
+          name: file
+          type: file
+          required: true
       responses:
         "204":
           description: No Content
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/echo.HTTPError'
+            $ref: "#/definitions/echo.HTTPError"
       summary: 画像アップロード
       tags:
-      - images
+        - images
 swagger: "2.0"
