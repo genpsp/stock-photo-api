@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"stock-photo-api/src/handlers"
 	"stock-photo-api/src/pkg/config"
 	"stock-photo-api/src/pkg/database"
@@ -20,6 +21,11 @@ func main() {
 	defer db.Close()
 
 	e := echo.New()
+
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
 
 	e.Server.Addr = ":8000"
 	e.Use(middleware.Logger())
