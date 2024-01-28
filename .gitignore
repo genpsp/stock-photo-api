@@ -40,3 +40,4 @@ go.work
 tmp/*
 */tmp/*
 *key.json
+.terraform/
