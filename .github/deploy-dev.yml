@@ -1,0 +1,79 @@
+name: Deploy Development
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  migration:
+    name: Migration
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+      url: https://dev.stock.buysell-cosmos.com
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authenticate to Google Cloud
+        uses: "google-github-actions/auth@v2"
+        with:
+          access_token_lifetime: 600s
+          workload_identity_provider: projects/547120653749/locations/global/workloadIdentityPools/github-actions-deploy/providers/github-actions
+          service_account: backend-deploy@stock-development-380704.iam.gserviceaccount.com
+      - name: Start Cloud SQL Auth Proxy
+        run: |
+          curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.6.0/cloud-sql-proxy.linux.amd64
+          chmod +x cloud-sql-proxy
+          mkdir /tmp/cloudsql
+          ./cloud-sql-proxy --address 0.0.0.0 --port 5432 stock-development-380704:asia-northeast1:stock-postgres &
+      - name: Install migrate
+        run: |
+          curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | sudo apt-key add -
+          echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/migrate.list
+          sudo apt-get update
+          sudo apt-get install -y migrate
+      - name: Migrate DB
+        run: migrate -path "app/common/migrations/ddl" -database "postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@0.0.0.0:5432/${{ secrets.DB_NAME }}?sslmode=disable&x-migrations-table=ddl_migrations" up
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: development
+      url: https://dev.stock.buysell-cosmos.com
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authenticate to Google Cloud
+        uses: "google-github-actions/auth@v2"
+        with:
+          access_token_lifetime: 600s
+          workload_identity_provider: projects/547120653749/locations/global/workloadIdentityPools/github-actions-deploy/providers/github-actions
+          service_account: backend-deploy@stock-development-380704.iam.gserviceaccount.com
+      - name: Configure Docker
+        run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -t asia-northeast1-docker.pkg.dev/stock-development-380704/stock-api-repository/stock-api-image \
+            .
+      - name: Push Docker Image
+        run: |
+          docker push asia-northeast1-docker.pkg.dev/stock-development-380704/stock-api-repository/stock-api-image
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run \
+            deploy \
+            stock-api-container \
+            --image \
+            asia-northeast1-docker.pkg.dev/stock-development-380704/stock-api-repository/stock-api-image \
+            --region \
+            asia-northeast1 \
