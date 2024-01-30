@@ -41,3 +41,4 @@ tmp/*
 */tmp/*
 *key.json
 .terraform/
+*cloud-sql-proxy*
