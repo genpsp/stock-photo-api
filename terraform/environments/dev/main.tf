@@ -24,6 +24,19 @@ module "service_account" {
   project_id = var.project_id
 }
 
+module "database" {
+  source           = "../../modules/database"
+  project_id       = var.project_id
+  region           = var.region
+  instance_name    = "stock-photo-database"
+  database_version = "POSTGRES_15"
+  tier             = "db-f1-micro"
+  backup_enabled   = true
+  backup_days      = 2
+  logical_decoding = "off"
+  max_connections  = 25
+}
+
 module "storage" {
   source                      = "../../modules/storage"
   env                         = var.env
@@ -46,4 +59,9 @@ module "workload_identity" {
   github_service_account_name = module.service_account.github_service_account_name
 
   depends_on = [module.service_account]
+}
+
+module "secret" {
+  source                = "../../modules/secret"
+  default_user_password = module.database.default_user_password
 }

@@ -3,11 +3,9 @@ variable "env" {
 }
 
 variable "project_id" {
-  type    = string
-  default = "stock-photo-test"
+  type = string
 }
 
 variable "region" {
-  type    = string
-  default = "asia-northeast1"
+  type = string
 }
