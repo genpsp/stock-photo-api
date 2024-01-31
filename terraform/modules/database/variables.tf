@@ -22,12 +22,12 @@ variable "backup_enabled" {
   type = bool
 }
 
-variable "backup_days" {
-  type = number
+variable "deletion_protection" {
+  type = bool
 }
 
-variable "logical_decoding" {
-  type = string
+variable "backup_days" {
+  type = number
 }
 
 variable "max_connections" {

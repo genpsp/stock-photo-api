@@ -29,12 +29,12 @@ module "database" {
   project_id       = var.project_id
   region           = var.region
   instance_name    = "stock-photo-database"
-  database_version = "POSTGRES_15"
+  database_version = "MYSQL_8_0"
   tier             = "db-f1-micro"
   backup_enabled   = true
   backup_days      = 2
-  logical_decoding = "off"
   max_connections  = 25
+  deletion_protection = false
 }
 
 module "storage" {

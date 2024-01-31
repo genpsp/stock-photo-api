@@ -3,7 +3,9 @@ resource "google_sql_database_instance" "stock_photo_database" {
   database_version = var.database_version
   name             = var.instance_name
   region           = var.region
-
+  root_password    = random_password.default_user_password.result
+  deletion_protection = var.deletion_protection
+  
   settings {
     activation_policy     = "ALWAYS"
     availability_type     = "REGIONAL"
@@ -19,8 +21,8 @@ resource "google_sql_database_instance" "stock_photo_database" {
     }
 
     database_flags {
-      name  = "cloudsql.logical_decoding"
-      value = var.logical_decoding
+      name  = "default_authentication_plugin"
+      value = "mysql_native_password"
     }
 
     database_flags {
@@ -43,8 +45,8 @@ resource "google_sql_database_instance" "stock_photo_database" {
       }
       enabled                        = var.backup_enabled
       location                       = "asia"
-      point_in_time_recovery_enabled = true
       start_time                     = "00:00"
+      binary_log_enabled             = true
       transaction_log_retention_days = var.backup_days
     }
   }
@@ -56,7 +58,7 @@ resource "random_password" "default_user_password" {
 }
 
 resource "google_sql_user" "default_user" {
-  name     = "postgres"
+  name     = "default"
   password = random_password.default_user_password.result
   instance = google_sql_database_instance.stock_photo_database.id
 }
