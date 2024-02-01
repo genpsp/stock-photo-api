@@ -18,6 +18,10 @@ variable "tier" {
   type = string
 }
 
+variable "availability_type" {
+  type = string
+}
+
 variable "backup_enabled" {
   type = bool
 }

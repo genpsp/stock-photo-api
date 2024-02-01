@@ -31,6 +31,7 @@ module "database" {
   instance_name    = "stock-photo-database"
   database_version = "MYSQL_8_0"
   tier             = "db-f1-micro"
+  availability_type = "ZONAL"
   backup_enabled   = true
   backup_days      = 2
   max_connections  = 25

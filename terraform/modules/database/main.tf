@@ -8,7 +8,7 @@ resource "google_sql_database_instance" "stock_photo_database" {
   
   settings {
     activation_policy     = "ALWAYS"
-    availability_type     = "REGIONAL"
+    availability_type     = var.availability_type
     pricing_plan          = "PER_USE"
     tier                  = var.tier
     disk_autoresize       = true
