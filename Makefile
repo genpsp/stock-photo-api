@@ -50,10 +50,10 @@ migrate-up:
 
 .PHONY: migrate-down
 migrate-down:
-	docker exec ${APP_CONTAINER_NAME} migrate -database ${DB_URL} -path=src/migration/ddl down -all
-	docker exec ${APP_CONTAINER_NAME} migrate -database ${DB_URL} -path=src/migration/seed/local down -all
-	docker exec ${APP_CONTAINER_NAME} migrate -database ${TEST_DB_URL} -path=src/migration/ddl down -all
-	docker exec ${APP_CONTAINER_NAME} migrate -database ${TEST_DB_URL} -path=src/migration/seed/local down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=src/migration/seed/local down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=src/migration/ddl down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=src/migration/seed/local down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=src/migration/ddl down -all
 
 .PHONY: migrate-create
 migrate-create:
