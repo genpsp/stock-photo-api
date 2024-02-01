@@ -44,7 +44,7 @@ $ chmod +x cloud-sql-proxy
 cloud_sql_proxy で dev の CloudSQL に接続
 
 ```
-$ ./cloud-sql-proxy --port 15432 stock-photo-test:asia-northeast1:stock-photo-database
+$ ./cloud_sql_proxy -instances=stock-photo-test:asia-northeast1:stock-photo-database=tcp:13306
 ```
 
-成功すると `localhost:15432` で DB に接続できるようになる
+成功すると `localhost:13306` で DB に接続できるようになる
