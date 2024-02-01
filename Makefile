@@ -1,7 +1,7 @@
 export
 DB_PORT := 3306
 APP_PORT := 8000
-DB_NAME := default
+DB_NAME := local
 TEST_DB_NAME := test
 APP_CONTAINER_NAME := stock-photo-app
 DB_CONTAINER_NAME := stock-photo-db
@@ -10,13 +10,13 @@ ifneq (,$(wildcard ./.env))
 	include .env
 endif
 
-DB_URL := "mysql://user:password@tcp(${DB_CONTAINER_NAME}:${DB_PORT})/${DB_NAME}?x-migrations-table=migrations"
-TEST_DB_URL := "mysql://user:password@tcp(${DB_CONTAINER_NAME}:${DB_PORT})/${TEST_DB_NAME}?x-migrations-table=migrations"
+DB_URL := mysql://user:password@tcp(${DB_CONTAINER_NAME}:${DB_PORT})/${DB_NAME}
+TEST_DB_URL := mysql://user:password@tcp(${DB_CONTAINER_NAME}:${DB_PORT})/${TEST_DB_NAME}
 
 .PHONY: init
 init:
 	@make up
-	@make local-db-create
+	@make test-db-create
 	@make migrate-up
 	@make logs
 
@@ -37,16 +37,16 @@ clean:
 	docker compose stop
 	docker compose down
 
-.PHONY: local-db-create
-local-db-create:
+.PHONY: test-db-create
+test-db-create:
 	docker exec ${DB_CONTAINER_NAME} mysql -u user -ppassword -e "CREATE DATABASE test CHARACTER SET utf8mb4"
 
 .PHONY: migrate-up
 migrate-up:
-	docker exec ${APP_CONTAINER_NAME} migrate -database ${DB_URL} -path=src/migration/ddl up
-	docker exec ${APP_CONTAINER_NAME} migrate -database ${DB_URL} -path=src/migration/seed/local up
-	docker exec ${APP_CONTAINER_NAME} migrate -database ${TEST_DB_URL} -path=src/migration/ddl up
-	docker exec ${APP_CONTAINER_NAME} migrate -database ${TEST_DB_URL} -path=src/migration/seed/local up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=src/migration/ddl up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=src/migration/seed/local up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=src/migration/ddl up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=src/migration/seed/local up
 
 .PHONY: migrate-down
 migrate-down:
@@ -57,11 +57,11 @@ migrate-down:
 
 .PHONY: migrate-create
 migrate-create:
-	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir src/migration/ddl -seq ${NAME}
+	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir src/migration/ddl -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
 
 .PHONY: migrate-create-seed
 migrate-create-seed:
-	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir src/migration/seed/local -seq ${NAME}
+	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir src/migration/seed/local -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
 
 .PHONY: swagger-generate
 swagger-generate:
