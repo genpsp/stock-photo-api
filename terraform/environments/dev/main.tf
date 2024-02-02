@@ -38,6 +38,27 @@ module "database" {
   deletion_protection = false
 }
 
+module "cloudrun" {
+  source           = "../../modules/cloudrun"
+  env = var.env
+  project_id       = var.project_id
+  region           = var.region
+  instance_name    = "stock-photo-api"
+  image_url = "asia-northeast1-docker.pkg.dev/${var.project_id}/${module.repository.stock_photo_api_repository_id}/stock-photo-api-image"
+  cloudrun_service_account_email = module.service_account.cloudrun_service_account_email
+  stock_photo_database_connection_name = module.database.stock_photo_database_connection_name
+  cpu = "1000m"
+  memory = "514Mi"
+}
+
+module "load_barancer" {
+  source                      = "../../modules/load_barancer"
+  project_id                  = var.project_id
+  region                      = var.region
+  stock_photo_api_url = module.cloudrun.stock_photo_api_url
+  stock_photo_api_name = module.cloudrun.stock_photo_api_name
+}
+
 module "storage" {
   source                      = "../../modules/storage"
   env                         = var.env

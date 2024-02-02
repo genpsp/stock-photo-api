@@ -66,3 +66,6 @@ resource "google_sql_user" "default_user" {
 output "default_user_password" {
   value = random_password.default_user_password.result
 }
+output "stock_photo_database_connection_name" {
+  value = google_sql_database_instance.stock_photo_database.connection_name
+}
