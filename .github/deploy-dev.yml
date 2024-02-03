@@ -32,9 +32,9 @@ jobs:
       uses: 'google-github-actions/get-secretmanager-secrets@v2'
       with:
         secrets: |-
-          DB_NAME:stock-photo-test/DB_NAME
-          DB_USER:stock-photo-test/DB_USER
-          DB_PASSWORD:stock-photo-test/DB_PASSWORD
+          DB_NAME:stock-photo-test/db_name
+          DB_USER:stock-photo-test/db_user
+          DB_PASSWORD:stock-photo-test/db_password
 
       - name: Start Cloud SQL Auth Proxy
         run: |
