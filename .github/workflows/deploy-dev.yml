@@ -37,6 +37,14 @@ jobs:
             DB_USER:stock-photo-test/DB_USER
             DB_PASSWORD:stock-photo-test/DB_PASSWORD
 
+      - name: Cache golang-migrate
+        uses: actions/cache@v2
+        with:
+          path: /usr/bin/migrate
+          key: ${{ runner.os }}-migrate-${{ hashFiles('**/migrate.list') }}
+          restore-keys: |
+            ${{ runner.os }}-migrate-
+
       - name: Install golang-migrate
         run: |
           curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | sudo apt-key add -
