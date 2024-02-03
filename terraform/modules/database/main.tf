@@ -30,6 +30,11 @@ resource "google_sql_database_instance" "stock_photo_database" {
       value = var.max_connections
     }
 
+    database_flags {
+      name  = "wait_timeout"
+      value = 60
+    }
+
     location_preference {
       zone = "asia-northeast1-a"
     }
