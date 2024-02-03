@@ -51,7 +51,7 @@ jobs:
           sudo apt-get install -y migrate
 
       - name: Run migration
-        run: migrate -path "app/src/migration/ddl" -database "mysql://${{ steps.secrets.outputs.DB_USER }}:${{ steps.secrets.outputs.DB_PASSWORD }}@tcp(localhost:3306)/${{ steps.secrets.outputs.DB_NAME }}" up
+        run: migrate -path ./app/src/migration/ddl -database "mysql://${{ steps.secrets.outputs.DB_USER }}:${{ steps.secrets.outputs.DB_PASSWORD }}@tcp(localhost:3306)/${{ steps.secrets.outputs.DB_NAME }}" up
 
   build-deploy:
     name: Build and Deploy
