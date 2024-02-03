@@ -77,9 +77,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build \
-            -t ${{ env.API_IMAGE }} \
-            .
+          docker build  -t ${{ env.API_IMAGE }} ./docker
 
       - name: Push Docker Image
         run: |
