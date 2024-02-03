@@ -39,7 +39,7 @@ jobs:
 
       - name: Start Cloud SQL Auth Proxy
         run: |
-          curl -o cloud-sql-proxy curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.6.1/cloud-sql-proxy.linux.arm64
+          curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.6.1/cloud-sql-proxy.linux.amd64
           chmod +x cloud-sql-proxy
           ./cloud-sql-proxy --address 0.0.0.0 --port 3306 stock-photo-test:asia-northeast1:stock-photo-database &
 
