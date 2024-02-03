@@ -42,3 +42,4 @@ tmp/*
 *key.json
 .terraform/
 *cloud-sql-proxy*
+*errored.tfstate*
