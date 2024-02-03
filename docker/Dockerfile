@@ -4,10 +4,10 @@ ENV TZ=Asia/Tokyo
 
 WORKDIR /app
 
-COPY go.* ./
+COPY ../go.* ./
 RUN go mod download
 
-COPY . ./
+COPY ../ ./
 
 RUN go build -v -o server
 
