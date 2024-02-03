@@ -1,5 +1,4 @@
 resource "google_sql_database_instance" "stock_photo_database" {
-  provider            = google
   database_version    = var.database_version
   name                = var.instance_name
   region              = var.region

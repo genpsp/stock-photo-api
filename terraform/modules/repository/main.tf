@@ -5,6 +5,6 @@ resource "google_artifact_registry_repository" "stock_photo_api_repository" {
   format        = "DOCKER"
 }
 
-output "stock_photo_api_repository_id" {
-  value = google_artifact_registry_repository.stock_photo_api_repository.id
+output "stock_photo_api_repository_name" {
+  value = google_artifact_registry_repository.stock_photo_api_repository.name
 }

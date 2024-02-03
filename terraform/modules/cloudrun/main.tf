@@ -16,6 +16,10 @@ resource "google_cloud_run_service" "stock_photo_api" {
       containers {
         image = var.image_url
 
+        ports {
+          container_port = 8000
+        }
+
         resources {
           limits = {
             "cpu" : var.cpu

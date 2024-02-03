@@ -44,7 +44,7 @@ module "cloudrun" {
   project_id                           = var.project_id
   region                               = var.region
   instance_name                        = "stock-photo-api"
-  image_url                            = "asia-northeast1-docker.pkg.dev/${var.project_id}/${module.repository.stock_photo_api_repository_id}/stock-photo-api-image"
+  image_url                            = "asia-northeast1-docker.pkg.dev/${var.project_id}/${module.repository.stock_photo_api_repository_name}/stock-photo-api-image"
   cloudrun_sa_email                    = module.service_account.cloudrun_sa_email
   stock_photo_database_connection_name = module.database.stock_photo_database_connection_name
   cpu                                  = "1000m"
