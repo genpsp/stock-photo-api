@@ -1,6 +1,6 @@
 resource "google_cloud_run_service" "stock_photo_api" {
-  name     = var.instance_name
-  location = var.region
+  name                       = var.instance_name
+  location                   = var.region
   autogenerate_revision_name = true
 
   metadata {
@@ -16,10 +16,6 @@ resource "google_cloud_run_service" "stock_photo_api" {
       containers {
         image = var.image_url
 
-        volume_mounts {
-          name       = "credentials"
-          mount_path = "/app/credentials"
-        }
         resources {
           limits = {
             "cpu" : var.cpu
@@ -31,23 +27,16 @@ resource "google_cloud_run_service" "stock_photo_api" {
           name  = "ENV"
           value = var.env
         }
-        env {
-          name = "DB_DSN"
-          value_from {
-            secret_key_ref {
-              name = ""
-              key  = "latest"
-            }
-          }
-        }
+        # env {
+        #   name = "DB_DSN"
+        #   value_from {
+        #     secret_key_ref {
+        #       name = ""
+        #       key  = "latest"
+        #     }
+        #   }
+        # }
       }
-
-      # volumes {
-      #   name = "credentials"
-      #   secret {
-      #     secret_name = data.google_secret_manager_secret.gcp_credentials.secret_id
-      #   }
-      # }
     }
 
     metadata {

@@ -13,3 +13,7 @@ variable "stock_photo_api_url" {
 variable "stock_photo_api_name" {
   type = string
 }
+
+variable "allow_access_ips" {
+  type = list(string)
+}

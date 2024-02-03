@@ -26,7 +26,7 @@ module "backend_lb_http" {
 
       health_check = {
         request_path = "/healthz"
-        port         = 3000
+        port         = 8000
       }
 
       log_config = {
@@ -35,17 +35,11 @@ module "backend_lb_http" {
       }
 
       iap_config = {
-        enable               = false
-        oauth2_client_id     = null
-        oauth2_client_secret = null
+        enable = false
       }
 
-      description            = "backend load balancer"
-      custom_request_headers = null
-      security_policy        = google_compute_security_policy.policy.name
-      compression_mode       = null
-      port_name              = null
-      protocol               = null
+      description     = "backend load balancer"
+      security_policy = google_compute_security_policy.policy.name
     }
   }
 }
@@ -57,7 +51,7 @@ resource "google_compute_global_address" "backend_lb_ip" {
 resource "google_compute_region_network_endpoint_group" "backend_neg" {
   name                  = "backend-neg"
   network_endpoint_type = "SERVERLESS"
-  region                = "asia-northeast1"
+  region                = var.region
 
   cloud_run {
     service = var.stock_photo_api_name
@@ -76,16 +70,6 @@ resource "google_compute_url_map" "default" {
   path_matcher {
     name            = "path-matcher"
     default_service = module.backend_lb_http.backend_services.default.id
-
-    path_rule {
-      paths   = ["/console/*"]
-      service = module.backend_lb_http.backend_services.console.id
-    }
-
-    path_rule {
-      paths   = ["/api/*"]
-      service = module.backend_lb_http.backend_services.api.id
-    }
   }
 }
 
@@ -93,40 +77,14 @@ resource "google_compute_security_policy" "policy" {
   name = "backend-lb-policy"
 
   rule {
-    action   = "deny(502)"
-    priority = "2147483647"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    description = "default all deny rule"
-  }
-
-  rule {
     action   = "allow"
-    priority = "100"
+    priority = "2147483647"
     match {
       versioned_expr = "SRC_IPS_V1"
       config {
         src_ip_ranges = var.allow_access_ips
       }
     }
-    description = "allow access from buysell internal"
+    description = "allow access rule"
   }
-}
-
-resource "google_iap_web_backend_service_iam_binding" "console_iap_iam_binding" {
-  web_backend_service = module.backend_lb_http.backend_services.console.name
-  role                = "roles/iap.httpsResourceAccessor"
-  members = [
-    "domain:buysell-technologies.com",
-  ]
-}
-
-data "google_secret_manager_secret_version" "oauth_client_secret" {
-  provider = google-beta
-  project  = var.project_id
-  secret   = "iap-oauth2-client-secret"
 }
