@@ -1,0 +1,88 @@
+name: Deploy Development
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  API_IMAGE: asia-northeast1-docker.pkg.dev/stock-photo-test/stock-photo-api-repository/stock-photo-api-image
+
+jobs:
+  migration:
+    name: Migration
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+      url: https://dev.stock.buysell-cosmos.com
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authenticate to Google Cloud
+        uses: "google-github-actions/auth@v2"
+        with:
+          access_token_lifetime: 1000s
+          workload_identity_provider: projects/538602165908/locations/global/workloadIdentityPools/identity-pool-dev/providers/github-actions-pool-provider-dev
+      
+      - id: 'secrets'
+      uses: 'google-github-actions/get-secretmanager-secrets@v2'
+      with:
+        secrets: |-
+          DB_NAME:stock-photo-test/db_name
+          DB_USER:stock-photo-test/db_user
+          DB_PASSWORD:stock-photo-test/db_password
+
+      - name: Start Cloud SQL Auth Proxy
+        run: |
+          curl -o cloud-sql-proxy curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.6.1/cloud-sql-proxy.linux.arm64
+          chmod +x cloud-sql-proxy
+          ./cloud-sql-proxy --address 0.0.0.0 --port 3306 stock-photo-test:asia-northeast1:stock-photo-database &
+      
+      - name: Install golang-migrate
+        run: |
+          curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | sudo apt-key add -
+          echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/migrate.list
+          sudo apt-get update
+          sudo apt-get install -y migrate
+
+      - name: Run migration
+        run: migrate -path "app/common/migrations/ddl" -database "mysql://${{ steps.secrets.outputs.DB_USER }}:${{ steps.secrets.outputs.DB_PASSWORD }}@tcp(localhost:3306)/${{ steps.secrets.outputs.DB_NAME }}" up
+
+  build-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: development
+      url: https://dev.stock.buysell-cosmos.com
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authenticate to Google Cloud
+        uses: "google-github-actions/auth@v2"
+        with:
+          access_token_lifetime: 1000s
+          workload_identity_provider: projects/538602165908/locations/global/workloadIdentityPools/identity-pool-dev/providers/github-actions-pool-provider-dev
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -t ${{ env.API_IMAGE }} \
+            .
+            
+      - name: Push Docker Image
+        run: |
+          docker push ${{ env.API_IMAGE }}
+
+      # - name: Deploy to Cloud Run
+      #   run: |
+      #     gcloud run deploy stock-photo-api --image ${{ env.API_IMAGE }} --region asia-northeast1
