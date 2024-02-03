@@ -78,10 +78,9 @@ module "workload_identity" {
   source                      = "../../modules/workload_identity"
   env                         = var.env
   project_id                  = var.project_id
-  github_repository           = "https://github.com/genpsp/stock-photo-web"
+  github_api_repository       = "https://github.com/genpsp/stock-photo-api"
   github_service_account_name = module.service_account.github_service_account_name
-
-  depends_on = [module.service_account]
+  depends_on                  = [module.service_account]
 }
 
 module "secret" {

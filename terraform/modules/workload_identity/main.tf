@@ -19,12 +19,12 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
 
   oidc {
     issuer_uri        = "https://token.actions.githubusercontent.com"
-    allowed_audiences = [var.github_repository]
+    allowed_audiences = [var.github_api_repository]
   }
 }
 
 resource "google_service_account_iam_member" "workload_identity_user" {
   service_account_id = var.github_service_account_name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.identity_pool.name}/attribute.repository/${var.github_repository}"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.identity_pool.name}/attribute.repository/${var.github_api_repository}"
 }
