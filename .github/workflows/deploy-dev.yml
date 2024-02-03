@@ -71,13 +71,12 @@ jobs:
           access_token_lifetime: 1000s
           workload_identity_provider: projects/538602165908/locations/global/workloadIdentityPools/identity-pool/providers/github-actions-pool-provider
           service_account: github-actions-sa@stock-photo-test.iam.gserviceaccount.com
-
       - name: Configure Docker
         run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
 
       - name: Build Docker Image
         run: |
-          docker build  -t ${{ env.API_IMAGE }} ./docker
+          docker build -f ./docker/Dockerfile -t ${{ env.API_IMAGE }}
 
       - name: Push Docker Image
         run: |
