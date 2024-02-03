@@ -3,6 +3,11 @@ resource "google_service_account" "github_actions" {
   account_id   = "github-actions-sa"
   display_name = "GitHub Actions Service Account"
 }
+resource "google_project_iam_member" "ga_repository_writer" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
 
 resource "google_service_account" "cloudrun" {
   account_id   = "cloudrun-service-account"
