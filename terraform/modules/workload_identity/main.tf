@@ -26,7 +26,7 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
 resource "google_service_account_iam_member" "ga_workload_identity_user" {
   service_account_id = var.github_sa_name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.identity_pool.name}/attribute.repository/genpsp/stock-photo-api"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.identity_pool.name}/attribute.repository/${var.github_api_repository}"
 }
 
 output "identity_pool_name" {

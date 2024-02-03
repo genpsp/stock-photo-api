@@ -28,7 +28,7 @@ resource "google_project_iam_member" "cloudrun_cloudsql_client" {
   role    = "roles/cloudsql.client"
   member  = "serviceAccount:${google_service_account.cloudrun.email}"
 }
-resource "google_project_iam_member" "cloudrun_secret_manager_secret_accessor" {
+resource "google_project_iam_member" "cloudrun_secret_accessor" {
   project = var.project_id
   role    = "roles/secretmanager.secretAccessor"
   member  = "serviceAccount:${google_service_account.cloudrun.email}"
