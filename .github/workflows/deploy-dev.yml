@@ -14,8 +14,7 @@ jobs:
     name: Migration
     runs-on: ubuntu-latest
     environment:
-      name: development
-      url: https://dev.stock.buysell-cosmos.com
+      name: dev
     timeout-minutes: 5
     permissions:
       contents: read
@@ -25,6 +24,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: "google-github-actions/auth@v2"
         with:
+          project_id: "stock-photo-test"
           access_token_lifetime: 1000s
           workload_identity_provider: projects/538602165908/locations/global/workloadIdentityPools/identity-pool-dev/providers/github-actions-pool-provider-dev
 
