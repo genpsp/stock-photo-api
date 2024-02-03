@@ -8,6 +8,16 @@ resource "google_project_iam_member" "ga_repository_writer" {
   role    = "roles/artifactregistry.writer"
   member  = "serviceAccount:${google_service_account.github_actions.email}"
 }
+resource "google_project_iam_member" "ga_workload_identity_user" {
+  project = var.project_id
+  role    = "roles/iam.workloadIdentityUser"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
+resource "google_project_iam_member" "ga_secret_accessor" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
 
 resource "google_service_account" "cloudrun" {
   account_id   = "cloudrun-service-account"
