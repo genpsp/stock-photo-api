@@ -45,7 +45,7 @@ module "cloudrun" {
   region                               = var.region
   instance_name                        = "stock-photo-api"
   image_url                            = "asia-northeast1-docker.pkg.dev/${var.project_id}/${module.repository.stock_photo_api_repository_id}/stock-photo-api-image"
-  cloudrun_service_account_email       = module.service_account.cloudrun_service_account_email
+  cloudrun_sa_email                    = module.service_account.cloudrun_sa_email
   stock_photo_database_connection_name = module.database.stock_photo_database_connection_name
   cpu                                  = "1000m"
   memory                               = "514Mi"
@@ -61,11 +61,10 @@ module "load_barancer" {
 }
 
 module "storage" {
-  source                      = "../../modules/storage"
-  env                         = var.env
-  project_id                  = var.project_id
-  region                      = var.region
-  github_service_account_name = module.service_account.github_service_account_name
+  source     = "../../modules/storage"
+  env        = var.env
+  project_id = var.project_id
+  region     = var.region
 }
 
 module "repository" {
@@ -75,12 +74,12 @@ module "repository" {
 }
 
 module "workload_identity" {
-  source                      = "../../modules/workload_identity"
-  env                         = var.env
-  project_id                  = var.project_id
-  github_api_repository       = "https://github.com/genpsp/stock-photo-api"
-  github_service_account_name = module.service_account.github_service_account_name
-  depends_on                  = [module.service_account]
+  source                = "../../modules/workload_identity"
+  env                   = var.env
+  project_id            = var.project_id
+  github_api_repository = var.github_api_repository
+  github_sa_name        = module.service_account.github_sa_name
+  depends_on            = [module.service_account]
 }
 
 module "secret" {

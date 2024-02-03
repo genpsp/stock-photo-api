@@ -11,7 +11,7 @@ resource "google_cloud_run_service" "stock_photo_api" {
 
   template {
     spec {
-      service_account_name = var.cloudrun_service_account_email
+      service_account_name = var.cloudrun_sa_email
 
       containers {
         image = var.image_url

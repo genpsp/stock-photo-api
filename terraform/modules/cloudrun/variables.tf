@@ -18,7 +18,7 @@ variable "image_url" {
   type = string
 }
 
-variable "cloudrun_service_account_email" {
+variable "cloudrun_sa_email" {
   type = string
 }
 

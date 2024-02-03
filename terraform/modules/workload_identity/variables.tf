@@ -7,6 +7,6 @@ variable "project_id" {
 variable "github_api_repository" {
   type = string
 }
-variable "github_service_account_name" {
+variable "github_sa_name" {
   type = string
 }
