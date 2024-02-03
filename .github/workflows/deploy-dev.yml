@@ -26,7 +26,7 @@ jobs:
         with:
           project_id: "stock-photo-test"
           access_token_lifetime: 1000s
-          workload_identity_provider: projects/538602165908/locations/global/workloadIdentityPools/identity-pool-dev/providers/github-actions-pool-provider-dev
+          workload_identity_provider: projects/538602165908/locations/global/workloadIdentityPools/identity-pool/providers/github-actions-pool-provider
           service_account: github-actions-sa@stock-photo-test.iam.gserviceaccount.com
 
       - id: "secrets"
