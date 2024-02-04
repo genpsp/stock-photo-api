@@ -63,9 +63,13 @@ migrate-create:
 migrate-create-seed:
 	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir src/migration/seed/local -seq ${NAME}
 
-.PHONY: swagger-generate
-swagger-generate:
+.PHONY: swagger-gen
+swagger-gen:
 	docker exec ${APP_CONTAINER_NAME} swag init --parseDependency --parseInternal
+
+.PHONY: openapi-gen
+openapi-gen:
+	docker exec ${APP_CONTAINER_NAME} oapi-codegen -generate types -package oapi ./docs/swagger.yaml > ./src/handlers/types/types.gen.go
 
 .PHONY: test
 test:
