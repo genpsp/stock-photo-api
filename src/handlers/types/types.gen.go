@@ -16,6 +16,9 @@ type EchoHTTPError struct {
 type PostApiImagesUploadMultipartBody struct {
 	// File 画像ファイル
 	File openapi_types.File `json:"file"`
+
+	// Title 画像タイトル
+	Title string `json:"title"`
 }
 
 // PostApiImagesUploadMultipartRequestBody defines body for PostApiImagesUpload for multipart/form-data ContentType.
