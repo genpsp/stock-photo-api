@@ -1,13 +1,12 @@
 variable "env" {
   type = string
 }
-
 variable "project_id" {
-  type    = string
-  default = "stock-photo-test"
+  type = string
 }
-
 variable "region" {
-  type    = string
-  default = "asia-northeast1"
+  type = string
+}
+variable "github_api_repository" {
+  type = string
 }

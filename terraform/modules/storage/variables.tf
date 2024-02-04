@@ -7,6 +7,3 @@ variable "project_id" {
 variable "region" {
   type = string
 }
-variable "github_service_account_name" {
-  type = string
-}
