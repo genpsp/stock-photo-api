@@ -16,13 +16,14 @@ module "backend_lb" {
 
   backends = {
     default = {
+      protocol   = "HTTPS"
+      enable_cdn = false
+
       groups = [
         {
           group = google_compute_region_network_endpoint_group.backend_neg.id
         }
       ]
-
-      enable_cdn = false
 
       health_check = {
         request_path = "/healthz"

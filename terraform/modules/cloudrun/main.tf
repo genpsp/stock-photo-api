@@ -5,7 +5,8 @@ resource "google_cloud_run_service" "stock_photo_api" {
 
   metadata {
     annotations = {
-      "run.googleapis.com/ingress" = "internal-and-cloud-load-balancing"
+      # "run.googleapis.com/ingress" = "internal-and-cloud-load-balancing"
+      "run.googleapis.com/ingress" = "all"
     }
   }
 
@@ -55,7 +56,6 @@ resource "google_cloud_run_service" "stock_photo_api" {
 
   lifecycle {
     ignore_changes = [
-      metadata[0].annotations,
       template[0].metadata[0].annotations["run.googleapis.com/client-name"],
       template[0].metadata[0].annotations["run.googleapis.com/client-version"],
       template[0].metadata[0].labels["client.knative.dev/nonce"]
