@@ -60,6 +60,15 @@ module "load_barancer" {
   allow_access_ips     = ["*"]
 }
 
+module "dns" {
+  source        = "../../modules/dns"
+  project_id    = var.project_id
+  region        = var.region
+  dns_name      = "stock-photo-api-qgnvqghcya-an.a.run.app."
+  ttl           = 600
+  backend_lb_ip = module.load_barancer.backend_lb_ip
+}
+
 module "storage" {
   source     = "../../modules/storage"
   env        = var.env

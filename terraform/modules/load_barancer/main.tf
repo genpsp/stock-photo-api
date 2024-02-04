@@ -1,4 +1,4 @@
-module "backend_lb_http" {
+module "backend_lb" {
   source  = "GoogleCloudPlatform/lb-http/google//modules/serverless_negs"
   version = "10.1.0"
 
@@ -60,7 +60,7 @@ resource "google_compute_region_network_endpoint_group" "backend_neg" {
 
 resource "google_compute_url_map" "default" {
   name            = "backend-lb-url-map"
-  default_service = module.backend_lb_http.backend_services.default.id
+  default_service = module.backend_lb.backend_services.default.id
 
   host_rule {
     hosts        = ["*"]
@@ -69,7 +69,7 @@ resource "google_compute_url_map" "default" {
 
   path_matcher {
     name            = "path-matcher"
-    default_service = module.backend_lb_http.backend_services.default.id
+    default_service = module.backend_lb.backend_services.default.id
   }
 }
 
@@ -87,4 +87,8 @@ resource "google_compute_security_policy" "policy" {
     }
     description = "allow access rule"
   }
+}
+
+output "backend_lb_ip" {
+  value = module.backend_lb.external_ip
 }
