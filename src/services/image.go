@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 	"stock-photo-api/src/domain/model"
 	"stock-photo-api/src/domain/repository"
+	"stock-photo-api/src/handlers/request"
 	"stock-photo-api/src/pkg/config"
 	"time"
 
@@ -17,7 +17,7 @@ import (
 
 type (
 	ImageService interface {
-		Upload() (err error)
+		Upload(request.PostApiImagesUploadRequestBody) (err error)
 	}
 
 	imageServiceStruct struct {
@@ -33,21 +33,21 @@ func NewImageService(c config.Config, db *gorm.DB, ir repository.Image) ImageSer
 	}
 }
 
-func (s *imageServiceStruct) Upload() (err error) {
+func (s *imageServiceStruct) Upload(req request.PostApiImagesUploadRequestBody) (err error) {
 	bucket := "stock-photo-images-test"
-	object := "object-name"
+	object := req.File.Filename
 
 	ctx := context.Background()
 
-	client, err := storage.NewClient(ctx)
+	client, err := storage.NewClient(context.Background())
 	if err != nil {
 		return fmt.Errorf("storage.NewClient: %w", err)
 	}
 	defer client.Close()
 
-	f, err := os.Open("./src/landscape001.jpg")
+	f, err := req.File.Open()
 	if err != nil {
-		return fmt.Errorf("os.Open: %w", err)
+		return fmt.Errorf("req.File.Open: %w", err)
 	}
 	defer f.Close()
 
@@ -63,11 +63,10 @@ func (s *imageServiceStruct) Upload() (err error) {
 	if err := w.Close(); err != nil {
 		return fmt.Errorf("Writer.Close: %w", err)
 	}
-	fmt.Fprintf(w, "Blob %v uploaded.\n", object)
 
 	image := model.Image{
-		Title: "テスト画像",
-		URL:   "https://storage.cloud.google.com/stock-photo-images-test/object-name",
+		Title: req.Title,
+		URL:   "https://storage.cloud.google.com/stock-photo-images-test/" + object,
 	}
 
 	err = s.imageRepository.Create(s.db, image)
