@@ -16,6 +16,7 @@ import (
 // @description StockPhoto API ドキュメント
 func main() {
 	config := config.LoadConfig()
+	// logger, _ := logger.Init()
 
 	db := database.Open(config.MySQL)
 	defer db.Close()
@@ -29,6 +30,7 @@ func main() {
 
 	e.Server.Addr = ":8000"
 	e.Use(middleware.Logger())
+
 	handler := handlers.NewHandler(config, db.Master)
 
 	routes.Init(e, handler)
