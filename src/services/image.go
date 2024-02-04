@@ -34,7 +34,7 @@ func NewImageService(c config.Config, db *gorm.DB, ir repository.Image) ImageSer
 }
 
 func (s *imageServiceStruct) Upload(req request.PostApiImagesUploadRequestBody) (err error) {
-	bucket := "stock-photo-images-test"
+	bucket := "stock-photo-dev-images"
 	object := req.File.Filename
 
 	ctx := context.Background()
