@@ -7,13 +7,15 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+// EchoHTTPError defines model for echo.HTTPError.
+type EchoHTTPError struct {
+	Message *interface{} `json:"message,omitempty"`
+}
+
 // PostApiImagesUploadMultipartBody defines parameters for PostApiImagesUpload.
 type PostApiImagesUploadMultipartBody struct {
-	// File Image file
-	File *openapi_types.File `json:"file,omitempty"`
-
-	// Title Title of the image
-	Title *string `json:"title,omitempty"`
+	// File 画像ファイル
+	File openapi_types.File `json:"file"`
 }
 
 // PostApiImagesUploadMultipartRequestBody defines body for PostApiImagesUpload for multipart/form-data ContentType.
