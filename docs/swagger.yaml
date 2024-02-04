@@ -1,4 +1,3 @@
-openapi: 3.1.0
 definitions:
   echo.HTTPError:
     properties:
@@ -13,29 +12,27 @@ paths:
   /api/images/upload:
     post:
       consumes:
-        - multipart/form-data
+      - multipart/form-data
       description: リクエストされた画像をGCSにアップロードする
-      requestBody:
+      parameters:
+      - description: 画像タイトル
+        in: formData
+        name: title
         required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                  description: Title of the image
-                file:
-                  type: string
-                  format: binary
-                  description: Image file
+        type: string
+      - description: 画像ファイル
+        in: formData
+        name: file
+        required: true
+        type: file
       responses:
         "204":
           description: No Content
         "500":
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/echo.HTTPError"
+            $ref: '#/definitions/echo.HTTPError'
       summary: 画像アップロード
       tags:
-        - images
+      - images
+swagger: "2.0"
