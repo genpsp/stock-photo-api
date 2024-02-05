@@ -18,10 +18,10 @@ type MySQL struct {
 func NewMySQLConfig(env env.Env) MySQL {
 	var DBHost string
 
-	if env.Env != "local" {
-		DBHost = fmt.Sprintf("tcp(%s)", DBHost)
+	if env.Env == "local" {
+		DBHost = fmt.Sprintf("tcp(%s)", env.DBHost)
 	} else {
-		DBHost = fmt.Sprintf("unix(/cloudsql/%s)", DBHost)
+		DBHost = fmt.Sprintf("unix(/cloudsql/%s)", env.DBHost)
 	}
 
 	return MySQL{
