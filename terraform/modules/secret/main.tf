@@ -1,3 +1,10 @@
+resource "google_secret_manager_secret" "db_host" {
+  secret_id = "DB_HOST"
+  replication {
+    auto {}
+  }
+}
+
 resource "google_secret_manager_secret" "db_name" {
   secret_id = "DB_NAME"
   replication {
@@ -19,6 +26,10 @@ resource "google_secret_manager_secret" "db_password" {
   }
 }
 
+resource "google_secret_manager_secret_version" "db_host_version" {
+  secret      = google_secret_manager_secret.db_host.id
+  secret_data = var.db_host
+}
 resource "google_secret_manager_secret_version" "db_name_version" {
   secret      = google_secret_manager_secret.db_name.id
   secret_data = var.db_name

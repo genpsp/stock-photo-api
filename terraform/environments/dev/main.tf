@@ -93,6 +93,7 @@ module "workload_identity" {
 
 module "secret" {
   source                = "../../modules/secret"
+  db_host               = module.database.stock_photo_database_connection_name
   db_name               = module.database.default_database_name
   db_user               = module.database.default_user_name
   default_user_password = module.database.default_user_password
