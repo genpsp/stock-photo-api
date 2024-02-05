@@ -1,4 +1,5 @@
 env                   = "dev"
 project_id            = "stock-photo-test"
+project_number        = "538602165908"
 region                = "asia-northeast1"
 github_api_repository = "genpsp/stock-photo-api"
