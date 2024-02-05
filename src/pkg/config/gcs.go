@@ -5,18 +5,16 @@ import (
 )
 
 type GCS struct {
-	DBName       string
-	DBUser       string
-	DBPassword   string
-	DBHost       string
-	DBInstanceID string
+	DBName     string
+	DBUser     string
+	DBPassword string
+	DBHost     string
 }
 
 func NewGCSConfig(env env.Env) GCS {
 	return GCS{
-		DBName:       env.DBName,
-		DBUser:       env.DBUser,
-		DBPassword:   env.DBPassword,
-		DBInstanceID: env.DBInstanceID,
+		DBName:     env.DBName,
+		DBUser:     env.DBUser,
+		DBPassword: env.DBPassword,
 	}
 }
