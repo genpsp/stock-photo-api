@@ -43,6 +43,11 @@ resource "google_project_iam_member" "cloudrun_secret_accessor" {
   role    = "roles/secretmanager.secretAccessor"
   member  = "serviceAccount:${google_service_account.cloudrun.email}"
 }
+resource "google_project_iam_member" "cloudrun_storage_user" {
+  project = var.project_id
+  role    = "roles/storage.objectUser"
+  member  = "serviceAccount:${google_service_account.cloudrun.email}"
+}
 
 output "cloudrun_sa_email" {
   value = google_service_account.cloudrun.email
