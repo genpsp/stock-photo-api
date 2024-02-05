@@ -92,6 +92,6 @@ jobs:
         run: |
           docker push ${{ env.API_IMAGE }}
 
-      # - name: Deploy to Cloud Run
-      #   run: |
-      #     gcloud run deploy stock-photo-api --image ${{ env.API_IMAGE }} --region asia-northeast1
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy stock-photo-api --image ${{ env.API_IMAGE }} --region asia-northeast1
