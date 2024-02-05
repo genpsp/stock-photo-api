@@ -30,7 +30,7 @@ func dataSource(userName string, password string, host string, dbName string) st
 func Open(cfg config.MySQL) Database {
 	master, err := gorm.Open(
 		mysql.Open(
-			dataSource(cfg.DBUsername, cfg.DBPassword, cfg.DBHost, cfg.DBName),
+			dataSource(cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBName),
 		),
 	)
 	if err != nil {

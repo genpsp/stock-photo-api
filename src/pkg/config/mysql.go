@@ -1,13 +1,12 @@
 package config
 
 import (
-	"fmt"
 	"stock-photo-api/src/pkg/env"
 )
 
 type MySQL struct {
 	DBName       string
-	DBUsername   string
+	DBUser       string
 	DBPassword   string
 	DBHost       string
 	DBInstanceID string
@@ -17,17 +16,17 @@ type MySQL struct {
 }
 
 func NewMySQLConfig(env env.Env) MySQL {
-	DBInstanceID := env.DBInstanceID
+	// DBInstanceID := env.DBInstanceID
 	DBHost := env.DBHost
 
-	switch env.Env {
-	case "dev", "stg", "prd":
-		DBHost = fmt.Sprintf("unix(/cloudsql/%s)", DBInstanceID)
-	}
+	// switch env.Env {
+	// case "dev", "stg", "prd":
+	// 	DBHost = fmt.Sprintf("unix(/cloudsql/%s)", DBInstanceID)
+	// }
 
 	return MySQL{
 		DBName:       env.DBName,
-		DBUsername:   env.DBUsername,
+		DBUser:       env.DBUser,
 		DBPassword:   env.DBPassword,
 		DBHost:       DBHost,
 		DBInstanceID: env.DBInstanceID,

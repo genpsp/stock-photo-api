@@ -8,7 +8,7 @@ import (
 type Env struct {
 	Env          string
 	DBName       string
-	DBUsername   string
+	DBUser       string
 	DBPassword   string
 	DBInstanceID string
 	DBHost       string
@@ -25,7 +25,7 @@ func NewEnv() Env {
 	return Env{
 		Env:          os.Getenv("ENV"),
 		DBName:       os.Getenv("DB_NAME"),
-		DBUsername:   os.Getenv("DB_USER_NAME"),
+		DBUser:       os.Getenv("DB_USER"),
 		DBPassword:   os.Getenv("DB_PASSWORD"),
 		DBInstanceID: os.Getenv("DB_INSTANCE_ID"),
 		DBHost:       os.Getenv("DB_HOST"),
