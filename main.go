@@ -16,6 +16,7 @@ import (
 // @description StockPhoto API ドキュメント
 func main() {
 	config := config.LoadConfig()
+	// logger, _ := logger.Init()
 
 	db := database.Open(config.MySQL)
 	defer db.Close()
@@ -23,12 +24,13 @@ func main() {
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000"},
+		AllowOrigins: []string{"http://localhost:3000", "https://stock-photo-test.web.app"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
 	e.Server.Addr = ":8000"
 	e.Use(middleware.Logger())
+
 	handler := handlers.NewHandler(config, db.Master)
 
 	routes.Init(e, handler)

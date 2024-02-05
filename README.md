@@ -48,3 +48,27 @@ $ ./cloud-sql-proxy --address 127.0.0.1 --port 13306 stock-photo-test:asia-north
 ```
 
 成功すると `localhost:13306` で DB に接続できるようになる
+
+### Open API 生成
+
+#### Open API ドキュメント生成
+
+npm ライブラリをインストール
+
+```
+$ npm install -g swagger2openapi
+```
+
+下記コマンドを実行
+
+```
+$ make swagger-gen
+```
+
+#### Open API コード生成
+
+下記コマンドを実行（型定義のみ生成）
+
+```
+$ make openapi-gen
+```

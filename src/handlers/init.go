@@ -15,7 +15,6 @@ type (
 )
 
 func NewHandler(c config.Config, db *gorm.DB) Handler {
-
 	ir := repository.NewImageRepository()
 
 	imageService := services.NewImageService(c, db, ir)

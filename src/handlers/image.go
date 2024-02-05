@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"stock-photo-api/src/handlers/request"
 	"stock-photo-api/src/services"
 
 	"github.com/labstack/echo/v4"
@@ -25,13 +26,23 @@ func NewImage(s services.ImageService) Image {
 // @Summary     画像アップロード
 // @Description リクエストされた画像をGCSにアップロードする
 // @Tags        images
-// @Accept			multipart/form-data
-// @Param 			file formData file true "画像ファイル"
+// @Accept		multipart/form-data
+// @Param 		title formData string true "画像タイトル"
+// @Param 		file formData request.MultipartFileHeader true "画像ファイル"
+// @Param 		file formData file true "画像ファイル"
 // @Success     204
 // @Failure     500 {object} echo.HTTPError
 // @Router      /api/images/upload [post]
 func (h *imageStruct) Upload(c echo.Context) (err error) {
-	if err := h.ImageService.Upload(); err != nil {
+	title := c.FormValue("title")
+	file, err := c.FormFile("file")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	req := request.PostApiImagesUploadRequest(title, file)
+
+	if err := h.ImageService.Upload(req); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 

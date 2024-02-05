@@ -32,15 +32,42 @@ resource "google_cloud_run_service" "stock_photo_api" {
           name  = "ENV"
           value = var.env
         }
-        # env {
-        #   name = "DB_DSN"
-        #   value_from {
-        #     secret_key_ref {
-        #       name = ""
-        #       key  = "latest"
-        #     }
-        #   }
-        # }
+        env {
+          name = "DB_HOST"
+          value_from {
+            secret_key_ref {
+              name = "DB_HOST"
+              key  = "latest"
+            }
+          }
+        }
+        env {
+          name = "DB_NAME"
+          value_from {
+            secret_key_ref {
+              name = "DB_NAME"
+              key  = "latest"
+            }
+          }
+        }
+        env {
+          name = "DB_USER"
+          value_from {
+            secret_key_ref {
+              name = "DB_USER"
+              key  = "latest"
+            }
+          }
+        }
+        env {
+          name = "DB_PASSWORD"
+          value_from {
+            secret_key_ref {
+              name = "DB_PASSWORD"
+              key  = "latest"
+            }
+          }
+        }
       }
     }
 

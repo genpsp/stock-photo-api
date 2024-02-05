@@ -27,6 +27,13 @@ const docTemplate = `{
                 "summary": "画像アップロード",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "画像タイトル",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "file",
                         "description": "画像ファイル",
                         "name": "file",

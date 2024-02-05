@@ -7,30 +7,28 @@ import (
 
 type MySQL struct {
 	DBName       string
-	DBUsername   string
+	DBUser       string
 	DBPassword   string
 	DBHost       string
-	DBInstanceID string
 	DebugMode    bool
 	MaxOpenConns int
 	MaxIdleConns int
 }
 
 func NewMySQLConfig(env env.Env) MySQL {
-	DBInstanceID := env.DBInstanceID
-	DBHost := env.DBHost
+	var DBHost string
 
-	switch env.Env {
-	case "dev", "stg", "prd":
-		DBHost = fmt.Sprintf("unix(/cloudsql/%s)", DBInstanceID)
+	if env.Env == "local" {
+		DBHost = fmt.Sprintf("tcp(%s)", env.DBHost)
+	} else {
+		DBHost = fmt.Sprintf("unix(/cloudsql/%s)", env.DBHost)
 	}
 
 	return MySQL{
 		DBName:       env.DBName,
-		DBUsername:   env.DBUsername,
+		DBUser:       env.DBUser,
 		DBPassword:   env.DBPassword,
 		DBHost:       DBHost,
-		DBInstanceID: env.DBInstanceID,
 		DebugMode:    env.DebugMode,
 		MaxOpenConns: env.MaxOpenConns,
 		MaxIdleConns: env.MaxIdleConns,
