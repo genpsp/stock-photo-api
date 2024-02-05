@@ -18,6 +18,11 @@ resource "google_project_iam_member" "ga_cloudsql_client" {
   role    = "roles/cloudsql.client"
   member  = "serviceAccount:${google_service_account.github_actions.email}"
 }
+resource "google_project_iam_member" "ga_cloudrun_developer" {
+  project = var.project_id
+  role    = "roles/run.developer"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
 
 resource "google_service_account" "cloudrun" {
   account_id   = "cloudrun-service-account"
