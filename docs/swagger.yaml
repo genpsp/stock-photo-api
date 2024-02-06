@@ -3,12 +3,42 @@ definitions:
     properties:
       message: {}
     type: object
+  model.Image:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+      url:
+        type: string
+    type: object
 info:
   contact: {}
   description: StockPhoto API ドキュメント
   title: StockPhoto API Documents
   version: "1.0"
 paths:
+  /api/images:
+    get:
+      description: アップロードされた画像の一覧を返す
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Image'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: 画像一覧取得
+      tags:
+      - images
   /api/images/upload:
     post:
       consumes:
