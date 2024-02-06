@@ -18,6 +18,7 @@ import (
 type (
 	ImageService interface {
 		Upload(request.PostApiImagesUploadRequestBody) (err error)
+		FindAll() ([]model.Image, error)
 	}
 
 	imageServiceStruct struct {
@@ -31,6 +32,15 @@ func NewImageService(c config.Config, db *gorm.DB, ir repository.Image) ImageSer
 		db:              db,
 		imageRepository: ir,
 	}
+}
+
+func (s *imageServiceStruct) FindAll() ([]model.Image, error) {
+	results, err := s.imageRepository.FindAll(s.db)
+	if err != nil {
+		return nil, errors.New("imageRepository Create error")
+	}
+
+	return results, nil
 }
 
 func (s *imageServiceStruct) Upload(req request.PostApiImagesUploadRequestBody) (err error) {
@@ -66,7 +76,7 @@ func (s *imageServiceStruct) Upload(req request.PostApiImagesUploadRequestBody) 
 
 	image := model.Image{
 		Title: req.Title,
-		URL:   "https://storage.cloud.google.com/stock-photo-images-test/" + object,
+		URL:   "https://storage.googleapis.com/stock-photo-dev-images/" + object,
 	}
 
 	err = s.imageRepository.Create(s.db, image)
