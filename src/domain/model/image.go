@@ -3,9 +3,9 @@ package model
 import "time"
 
 type Image struct {
-	ID        uint
-	Title     string
-	URL       string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint      `json:"id"`
+	Title     string    `json:"title"`
+	URL       string    `json:"url"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }

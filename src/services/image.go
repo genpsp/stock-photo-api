@@ -76,7 +76,7 @@ func (s *imageServiceStruct) Upload(req request.PostApiImagesUploadRequestBody) 
 
 	image := model.Image{
 		Title: req.Title,
-		URL:   "https://storage.cloud.google.com/stock-photo-images-test/" + object,
+		URL:   "https://storage.googleapis.com/stock-photo-dev-images/" + object,
 	}
 
 	err = s.imageRepository.Create(s.db, image)
