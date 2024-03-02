@@ -44,9 +44,6 @@ jobs:
             DB_USER:stock-photo-test/DB_USER
             DB_PASSWORD:stock-photo-test/DB_PASSWORD
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-
       - name: Start Cloud SQL Auth Proxy
         run: |
           curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.6.1/cloud-sql-proxy.linux.amd64
@@ -61,6 +58,7 @@ jobs:
           mkdir ./tmp
           echo -e "
             schemaspy.t=mysql\n
+            schemaspy.dp=mysql-connector.jar\n
             schemaspy.host=localhost\n
             schemaspy.port=3306\n
             schemaspy.db=${{ steps.secrets.outputs.DB_NAME }}\n
@@ -76,6 +74,7 @@ jobs:
           max_attempts: 3
           command: |
             wget https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-6.2.4.jar -O schemaspy.jar
+            wget https://search.maven.org/remotecontent?filepath=mysql/mysql-connector-java/8.0.30/mysql-connector-java-8.0.30.jar -O mysql-connector.jar
             java -jar schemaspy.jar -configFile ./tmp/schemaspy.properties
 
       - name: Upload to GCS
