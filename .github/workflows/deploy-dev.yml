@@ -67,10 +67,10 @@ jobs:
   generate-erd:
     uses: ./.github/workflows/generate-erd.yml
     with:
-      project_id: ${{ env.PROJECT_ID }}
-      workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
-      service_account: ${{ env.SERVICE_ACCOUNT }}
-      db_connection_name: ${{ env.DB_CONNECTION_NAME }}
+      project_id: stock-photo-test
+      workload_identity_provider: projects/538602165908/locations/global/workloadIdentityPools/identity-pool/providers/github-actions-pool-provider
+      service_account: github-actions-sa@stock-photo-test.iam.gserviceaccount.com
+      db_connection_name: stock-photo-test:asia-northeast1:stock-photo-database
 
   build-deploy:
     name: Build and Deploy
