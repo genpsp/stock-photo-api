@@ -67,6 +67,7 @@ jobs:
         run: migrate -path ./src/migration/ddl -database "mysql://${{ steps.secrets.outputs.DB_USER }}:${{ steps.secrets.outputs.DB_PASSWORD }}@tcp(0.0.0.0:3306)/${{ steps.secrets.outputs.DB_NAME }}" up
 
   generate-erd:
+    needs: migration
     uses: ./.github/workflows/generate-erd.yml
     with:
       project_id: stock-photo-test
