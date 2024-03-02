@@ -61,6 +61,7 @@ jobs:
             schemaspy.dp=mysql-connector.jar\n
             schemaspy.host=localhost\n
             schemaspy.port=3306\n
+            schemaspy.s=${{ steps.secrets.outputs.DB_NAME }}\n
             schemaspy.db=${{ steps.secrets.outputs.DB_NAME }}\n
             schemaspy.u=${{ steps.secrets.outputs.DB_USER }}\n
             schemaspy.p=${{ steps.secrets.outputs.DB_PASSWORD }}\n
