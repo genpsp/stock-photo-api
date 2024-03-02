@@ -33,3 +33,7 @@ resource "google_storage_bucket_iam_binding" "erd_public" {
 output "images_bucket_name" {
   value = google_storage_bucket.images.name
 }
+
+output "erd_bucket_name" {
+  value = google_storage_bucket.erd.name
+}

@@ -19,9 +19,10 @@ provider "google" {
 }
 
 module "service_account" {
-  source     = "../../modules/service_account"
-  env        = var.env
-  project_id = var.project_id
+  source          = "../../modules/service_account"
+  env             = var.env
+  project_id      = var.project_id
+  erd_bucket_name = module.storage.erd_bucket_name
 }
 
 module "database" {
