@@ -1,11 +1,16 @@
 resource "google_storage_bucket" "images" {
-  name                     = "stock-photo-${var.env}-images"
-  location                 = var.region
+  name     = "stock-photo-images"
+  location = var.region
+}
+
+resource "google_storage_bucket" "erd" {
+  name     = "stock-photo-erd"
+  location = var.region
 }
 
 resource "google_storage_bucket_iam_binding" "images_public" {
   bucket = google_storage_bucket.images.name
-  role = "roles/storage.legacyObjectReader"
+  role   = "roles/storage.legacyObjectReader"
   members = [
     "allUsers",
   ]

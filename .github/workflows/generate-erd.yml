@@ -1,0 +1,87 @@
+name: Generate ERD
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      project_id:
+        required: true
+        type: string
+      workload_identity_provider:
+        required: true
+        type: string
+      service_account:
+        required: true
+        type: string
+      db_connection_name:
+        required: true
+        type: string
+
+jobs:
+  generate_ERD:
+    name: Generate ERD
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Authenticate to google cloud"
+        uses: "google-github-actions/auth@v2"
+        with:
+          access_token_lifetime: 1000s
+          project_id: ${{ inputs.project_id }}
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ inputs.service_account }}
+
+      - id: "secrets"
+        uses: "google-github-actions/get-secretmanager-secrets@v2"
+        with:
+          secrets: |-
+            DB_NAME:stock-photo-test/DB_NAME
+            DB_USER:stock-photo-test/DB_USER
+            DB_PASSWORD:stock-photo-test/DB_PASSWORD
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Start Cloud SQL Auth Proxy
+        run: |
+          curl -o cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.6.1/cloud-sql-proxy.linux.amd64
+          chmod +x cloud-sql-proxy
+          ./cloud-sql-proxy --address 0.0.0.0 --port 3306 ${{ inputs.db_connection_name }} &
+
+      - name: Install graphviz
+        run: sudo apt install graphviz
+
+      - name: Make Config File
+        run: |
+          mkdir ./tmp
+          echo -e "
+            schemaspy.t=mysql\n
+            schemaspy.host=localhost\n
+            schemaspy.port=3306\n
+            schemaspy.db=${{ steps.secrets.outputs.DB_NAME }}\n
+            schemaspy.u=${{ steps.secrets.outputs.DB_USER }}\n
+            schemaspy.p=${{ steps.secrets.outputs.DB_PASSWORD }}\n
+            schemaspy.o=./tmp/schemaspy/output\n
+            " > ./tmp/schemaspy.properties
+
+      - name: Generate ERD
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: |
+            wget https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-6.2.4.jar -O schemaspy.jar
+            java -jar schemaspy.jar -configFile ./tmp/schemaspy.properties
+
+      - name: Upload to GCS
+        uses: "google-github-actions/upload-cloud-storage@v2"
+        with:
+          path: ./tmp/schemaspy/output
+          destination: stock-photo-erd/erd
+          parent: false
+          gzip: false

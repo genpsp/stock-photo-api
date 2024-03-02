@@ -7,7 +7,10 @@ on:
   workflow_dispatch:
 
 env:
-  API_IMAGE: asia-northeast1-docker.pkg.dev/stock-photo-test/stock-photo-api-repository/stock-photo-api-image
+  PROJECT_ID: stock-photo-test
+  WORKLOAD_IDENTITY_PROVIDER: projects/538602165908/locations/global/workloadIdentityPools/identity-pool/providers/github-actions-pool-provider
+  SERVICE_ACCOUNT: github-actions-sa@stock-photo-test.iam.gserviceaccount.com
+  DB_CONNECTION_NAME: stock-photo-test:asia-northeast1:stock-photo-database
 
 jobs:
   migration:
@@ -24,10 +27,10 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: "google-github-actions/auth@v2"
         with:
-          project_id: "stock-photo-test"
           access_token_lifetime: 1000s
-          workload_identity_provider: projects/538602165908/locations/global/workloadIdentityPools/identity-pool/providers/github-actions-pool-provider
-          service_account: github-actions-sa@stock-photo-test.iam.gserviceaccount.com
+          project_id: ${{ env.PROJECT_ID }}
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
 
       - id: "secrets"
         uses: "google-github-actions/get-secretmanager-secrets@v2"
@@ -61,9 +64,19 @@ jobs:
       - name: Run migration
         run: migrate -path ./src/migration/ddl -database "mysql://${{ steps.secrets.outputs.DB_USER }}:${{ steps.secrets.outputs.DB_PASSWORD }}@tcp(0.0.0.0:3306)/${{ steps.secrets.outputs.DB_NAME }}" up
 
+  generate-erd:
+    uses: ./.github/workflows/generate-erd.yml
+    with:
+      project_id: ${{ env.PROJECT_ID }}
+      workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+      service_account: ${{ env.SERVICE_ACCOUNT }}
+      db_connection_name: ${{ env.DB_CONNECTION_NAME }}
+
   build-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
+    env:
+      API_IMAGE: asia-northeast1-docker.pkg.dev/stock-photo-test/stock-photo-api-repository/stock-photo-api-image
     timeout-minutes: 10
     environment:
       name: development
@@ -76,10 +89,10 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: "google-github-actions/auth@v2"
         with:
-          project_id: "stock-photo-test"
+          project_id: ${{ env.PROJECT_ID }}
           access_token_lifetime: 1000s
-          workload_identity_provider: projects/538602165908/locations/global/workloadIdentityPools/identity-pool/providers/github-actions-pool-provider
-          service_account: github-actions-sa@stock-photo-test.iam.gserviceaccount.com
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
 
       - name: Configure Docker
         run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
