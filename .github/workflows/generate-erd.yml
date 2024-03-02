@@ -36,6 +36,9 @@ jobs:
           workload_identity_provider: ${{ inputs.workload_identity_provider }}
           service_account: ${{ inputs.service_account }}
 
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
       - id: "secrets"
         uses: "google-github-actions/get-secretmanager-secrets@v2"
         with:
@@ -85,3 +88,6 @@ jobs:
           destination: stock-photo-erd/erd
           parent: false
           gzip: false
+
+      - name: Set metadata
+        run: gsutil setmeta -h "Cache-Control:no-cache" gs://stock-photo-erd/erd/index.html
