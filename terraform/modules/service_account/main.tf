@@ -28,6 +28,11 @@ resource "google_project_iam_member" "ga_sa_user" {
   role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${google_service_account.github_actions.email}"
 }
+resource "google_project_iam_member" "ga_storage_creator" {
+  project = var.project_id
+  role    = "roles/storage.objectCreator"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
 
 resource "google_service_account" "cloudrun" {
   account_id   = "cloudrun-service-account"

@@ -6,11 +6,25 @@ resource "google_storage_bucket" "images" {
 resource "google_storage_bucket" "erd" {
   name     = "stock-photo-erd"
   location = var.region
+
+  website {
+    main_page_suffix = "index.html"
+  }
 }
 
 resource "google_storage_bucket_iam_binding" "images_public" {
   bucket = google_storage_bucket.images.name
-  role   = "roles/storage.legacyObjectReader"
+  role   = "roles/storage.objectViewer"
+
+  members = [
+    "allUsers",
+  ]
+}
+
+resource "google_storage_bucket_iam_binding" "erd_public" {
+  bucket = google_storage_bucket.erd.name
+  role   = "roles/storage.objectViewer"
+
   members = [
     "allUsers",
   ]
