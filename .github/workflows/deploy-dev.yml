@@ -67,6 +67,7 @@ jobs:
         run: migrate -path ./src/migration/ddl -database "mysql://${{ steps.secrets.outputs.DB_USER }}:${{ steps.secrets.outputs.DB_PASSWORD }}@tcp(0.0.0.0:3306)/${{ steps.secrets.outputs.DB_NAME }}" up
 
   generate-erd:
+    if: contains(github.event.head_commit.modified, 'src/migration/ddl/') || contains(github.event.head_commit.added, 'src/migration/ddl/') || contains(github.event.head_commit.removed, 'src/migration/ddl/')
     uses: ./.github/workflows/generate-erd.yml
     with:
       project_id: stock-photo-test
