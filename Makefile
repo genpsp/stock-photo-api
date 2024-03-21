@@ -39,42 +39,45 @@ clean:
 
 .PHONY: test-db-create
 test-db-create:
-	docker exec ${DB_CONTAINER_NAME} mysql -u user -ppassword -e "CREATE DATABASE test CHARACTER SET utf8mb4"
+	docker exec ${DB_CONTAINER_NAME} mysql -uuser -ppassword -e "CREATE DATABASE test CHARACTER SET utf8mb4"
 
 .PHONY: migrate-up
 migrate-up:
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=src/migration/ddl up
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=src/migration/seed/local up
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=src/migration/ddl up
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=src/migration/seed/local up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=migration/ddl up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=migration/seed/local up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=migration/ddl up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=migration/seed/local up
 
 .PHONY: migrate-down
 migrate-down:
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=src/migration/seed/local down -all
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=src/migration/ddl down -all
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=src/migration/seed/local down -all
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=src/migration/ddl down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=migration/seed/local down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=migration/ddl down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=migration/seed/local down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=migration/ddl down -all
 
 .PHONY: migrate-create
 migrate-create:
-	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir src/migration/ddl -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
+	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir migration/ddl -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
 
 .PHONY: migrate-create-seed
 migrate-create-seed:
-	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir src/migration/seed/local -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
+	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir migration/seed/local -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
 
 .PHONY: swagger-gen
 swagger-gen:
-	docker exec ${APP_CONTAINER_NAME} swag init --parseDependency --parseInternal
-	swagger2openapi --outfile ./docs/openapi.yaml ./docs/swagger.yaml
+	docker exec ${APP_CONTAINER_NAME} swag init -d ./services/app -o ./services/app/docs --parseDependency --parseInternal
+	swagger2openapi --outfile ./services/app/docs/openapi.yaml ./services/app/docs/swagger.yaml
+	docker exec ${APP_CONTAINER_NAME} swag init -d ./services/admin -o ./services/admin/docs --parseDependency --parseInternal
+	swagger2openapi --outfile ./services/admin/docs/openapi.yaml ./services/admin/docs/swagger.yaml
 
 .PHONY: openapi-gen
 openapi-gen:
-	docker exec ${APP_CONTAINER_NAME} oapi-codegen -generate types -package oapi ./docs/openapi.yaml > ./src/handlers/types/types.gen.go
+	docker exec ${APP_CONTAINER_NAME} oapi-codegen -generate types -package oapi ./services/app/docs/openapi.yaml > ./services/app/src/handlers/types/types.gen.go
+	docker exec ${APP_CONTAINER_NAME} oapi-codegen -generate types -package oapi ./services/admin/docs/openapi.yaml > ./services/admin/src/handlers/types/types.gen.go
 
 .PHONY: test
 test:
-	docker-compose exec app go test -v ./...
+	docker-compose exec app go test -v ./services/app/...
 
 .PHONY: logs
 logs:

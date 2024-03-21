@@ -26,11 +26,17 @@ $ touch .env.local
 
 docker が起動している状態で下記コマンドを実行する
 
+(docker 未インストールの場合は [Docker Desktop](https://www.docker.com/ja-jp/products/docker-desktop/) からインストール)
+
 ```
 $ make init
 ```
 
 起動したら http://localhost:8000 で API にアクセス
+
+### make init が失敗する場合
+`Docker Desktop -> Settings -> General`
+で `osxfs (Legacy)` を選択し `Use Rosetta for x86_64/amd64 emulation on Apple Silicon` にチェックを入れてApply&restartする
 
 ## Cloud SQL への接続方法
 
