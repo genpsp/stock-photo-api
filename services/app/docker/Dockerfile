@@ -9,6 +9,6 @@ RUN go mod download
 
 COPY ../ ./
 
-RUN go build ./services/app -v -o server
+RUN go build -v -o server ./services/app
 
 CMD ["/app/server"]
