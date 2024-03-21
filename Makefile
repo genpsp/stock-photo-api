@@ -65,12 +65,15 @@ migrate-create-seed:
 
 .PHONY: swagger-gen
 swagger-gen:
-	docker exec ${APP_CONTAINER_NAME} swag init --parseDependency --parseInternal
+	docker exec ${APP_CONTAINER_NAME} swag init -d ./services/app -o ./services/app/docs --parseDependency --parseInternal
 	swagger2openapi --outfile ./services/app/docs/openapi.yaml ./services/app/docs/swagger.yaml
+	docker exec ${APP_CONTAINER_NAME} swag init -d ./services/admin -o ./services/admin/docs --parseDependency --parseInternal
+	swagger2openapi --outfile ./services/admin/docs/openapi.yaml ./services/admin/docs/swagger.yaml
 
 .PHONY: openapi-gen
 openapi-gen:
 	docker exec ${APP_CONTAINER_NAME} oapi-codegen -generate types -package oapi ./services/app/docs/openapi.yaml > ./services/app/src/handlers/types/types.gen.go
+	docker exec ${APP_CONTAINER_NAME} oapi-codegen -generate types -package oapi ./services/admin/docs/openapi.yaml > ./services/admin/src/handlers/types/types.gen.go
 
 .PHONY: test
 test:
