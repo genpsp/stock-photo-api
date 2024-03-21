@@ -88,14 +88,54 @@ const docTemplate = `{
                 "message": {}
             }
         },
+        "enum.ImageApprovalStatus": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "PENDING",
+                "APPROVED",
+                "REJECTED"
+            ]
+        },
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
         "model.Image": {
             "type": "object",
             "properties": {
+                "approvalStatus": {
+                    "$ref": "#/definitions/enum.ImageApprovalStatus"
+                },
                 "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "detailUrl": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
+                },
+                "purchaseUrl": {
+                    "type": "string"
+                },
+                "thumbnailUrl": {
+                    "type": "string"
                 },
                 "title": {
                     "type": "string"
@@ -103,8 +143,8 @@ const docTemplate = `{
                 "updatedAt": {
                     "type": "string"
                 },
-                "url": {
-                    "type": "string"
+                "userId": {
+                    "type": "integer"
                 }
             }
         }

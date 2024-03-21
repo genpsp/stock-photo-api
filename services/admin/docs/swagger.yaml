@@ -3,18 +3,46 @@ definitions:
     properties:
       message: {}
     type: object
+  enum.ImageApprovalStatus:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - PENDING
+    - APPROVED
+    - REJECTED
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
   model.Image:
     properties:
+      approvalStatus:
+        $ref: '#/definitions/enum.ImageApprovalStatus'
       createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      detailUrl:
         type: string
       id:
         type: integer
+      purchaseUrl:
+        type: string
+      thumbnailUrl:
+        type: string
       title:
         type: string
       updatedAt:
         type: string
-      url:
-        type: string
+      userId:
+        type: integer
     type: object
 info:
   contact: {}
