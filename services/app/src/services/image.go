@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"stock-photo-api/domain/enum"
 	"stock-photo-api/domain/model"
 	"stock-photo-api/domain/repository"
 	"stock-photo-api/pkg/config"
@@ -75,8 +76,9 @@ func (s *imageServiceStruct) Upload(req request.PostApiImagesUploadRequestBody) 
 	}
 
 	image := model.Image{
-		Title: req.Title,
-		URL:   "https://storage.googleapis.com/stock-photo-images/" + object,
+		Title:          req.Title,
+		PurchaseURL:    "https://storage.googleapis.com/stock-photo-images/" + object,
+		ApprovalStatus: enum.PENDING,
 	}
 
 	err = s.imageRepository.Create(s.db, image)

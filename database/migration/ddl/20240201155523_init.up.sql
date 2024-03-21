@@ -14,7 +14,7 @@ CREATE TABLE images (
     thumbnail_url VARCHAR(255) NOT NULL,
     detail_url VARCHAR(255) NOT NULL,
     purchase_url VARCHAR(255) NOT NULL,
-    approval_status VARCHAR(50) NOT NULL,
+    approval_status TINYINT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT now(),
     updated_at DATETIME NOT NULL DEFAULT now(),
     deleted_at DATETIME DEFAULT NULL,
