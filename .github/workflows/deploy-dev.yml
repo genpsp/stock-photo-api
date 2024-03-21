@@ -68,6 +68,7 @@ jobs:
 
   generate-erd:
     needs: migration
+    if: contains(github.event.head_commit.modified, 'database/migration/ddl') || contains(github.event.head_commit.added, 'database/migration/ddl')
     uses: ./.github/workflows/generate-erd.yml
     with:
       project_id: stock-photo-test
