@@ -44,7 +44,7 @@ func (s *imageServiceStruct) FindAll() ([]model.Image, error) {
 }
 
 func (s *imageServiceStruct) Upload(req request.PostApiImagesUploadRequestBody) (err error) {
-	bucket := "stock-photo-dev-images"
+	bucket := "stock-photo-images"
 	object := req.File.Filename
 
 	ctx := context.Background()
@@ -76,7 +76,7 @@ func (s *imageServiceStruct) Upload(req request.PostApiImagesUploadRequestBody) 
 
 	image := model.Image{
 		Title: req.Title,
-		URL:   "https://storage.googleapis.com/stock-photo-dev-images/" + object,
+		URL:   "https://storage.googleapis.com/stock-photo-images/" + object,
 	}
 
 	err = s.imageRepository.Create(s.db, image)
