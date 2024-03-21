@@ -14,18 +14,39 @@ services:
       MYSQL_ROOT_PASSWORD: passowrd
       TZ: Asia/Tokyo
     volumes:
-      - ./docker/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./src/migration/init:/docker-entrypoint-initdb.d
+      - ./services/app/docker/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./migration/init:/docker-entrypoint-initdb.d
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD
-      
+      interval: 5s
+      timeout: 1m
+      retries: 5
+      start_period: 10s
+    command: mysqld --innodb_use_native_aio=0
+
   app:
     container_name: stock-photo-app
     build:
       context: .
-      dockerfile: ./docker/Dockerfile.local
+      dockerfile: ./services/app/docker/Dockerfile.local
     ports:
       - "8000:8000"
+    tty: true
+    volumes:
+      - ./:/app
+    env_file:
+      - .env.local
+    depends_on:
+      db:
+        condition: service_healthy
+
+  admin:
+    container_name: stock-photo-admin
+    build:
+      context: .
+      dockerfile: ./services/admin/docker/Dockerfile.local
+    ports:
+      - "8001:8000"
     tty: true
     volumes:
       - ./:/app
