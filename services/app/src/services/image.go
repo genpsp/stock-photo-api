@@ -77,6 +77,9 @@ func (s *imageServiceStruct) Upload(req request.PostApiImagesUploadRequestBody) 
 
 	image := model.Image{
 		Title:          req.Title,
+		UserID:         1,
+		ThumbnailURL:   "https://storage.googleapis.com/stock-photo-images/" + object,
+		DetailURL:      "https://storage.googleapis.com/stock-photo-images/" + object,
 		PurchaseURL:    "https://storage.googleapis.com/stock-photo-images/" + object,
 		ApprovalStatus: enum.PENDING,
 	}
