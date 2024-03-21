@@ -64,7 +64,7 @@ jobs:
           ./cloud-sql-proxy --address 0.0.0.0 --port 3306 stock-photo-test:asia-northeast1:stock-photo-database &
 
       - name: Run migration
-        run: migrate -path ./migration/ddl -database "mysql://${{ steps.secrets.outputs.DB_USER }}:${{ steps.secrets.outputs.DB_PASSWORD }}@tcp(0.0.0.0:3306)/${{ steps.secrets.outputs.DB_NAME }}" up
+        run: migrate -path ./database/migration/ddl -database "mysql://${{ steps.secrets.outputs.DB_USER }}:${{ steps.secrets.outputs.DB_PASSWORD }}@tcp(0.0.0.0:3306)/${{ steps.secrets.outputs.DB_NAME }}" up
 
   generate-erd:
     needs: migration
