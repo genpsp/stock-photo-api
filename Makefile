@@ -43,25 +43,25 @@ test-db-create:
 
 .PHONY: migrate-up
 migrate-up:
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=migration/ddl up
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=migration/seed/local up
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=migration/ddl up
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=migration/seed/local up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=database/migration/ddl up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=database/migration/seed/local up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=database/migration/ddl up
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=database/migration/seed/local up
 
 .PHONY: migrate-down
 migrate-down:
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=migration/seed/local down -all
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=migration/ddl down -all
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=migration/seed/local down -all
-	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=migration/ddl down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=seed_migrations" -path=database/migration/seed/local down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${DB_URL}?x-migrations-table=migrations" -path=database/migration/ddl down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=seed_migrations" -path=database/migration/seed/local down -all
+	docker exec ${APP_CONTAINER_NAME} migrate -database "${TEST_DB_URL}?x-migrations-table=migrations" -path=database/migration/ddl down -all
 
 .PHONY: migrate-create
 migrate-create:
-	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir migration/ddl -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
+	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir database/migration/ddl -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
 
 .PHONY: migrate-create-seed
 migrate-create-seed:
-	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir migration/seed/local -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
+	docker exec ${APP_CONTAINER_NAME} migrate create -ext sql -dir database/migration/seed/local -format "20060102150405" -tz "Asia/Tokyo" ${NAME}
 
 .PHONY: swagger-gen
 swagger-gen:

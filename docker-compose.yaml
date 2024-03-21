@@ -11,18 +11,17 @@ services:
       MYSQL_DATABASE: local
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: passowrd
+      MYSQL_ROOT_PASSWORD: password
       TZ: Asia/Tokyo
     volumes:
-      - ./services/app/docker/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./migration/init:/docker-entrypoint-initdb.d
+      - ./database/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./database/migration/init:/docker-entrypoint-initdb.d
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD
       interval: 5s
       timeout: 1m
       retries: 5
       start_period: 10s
-    command: mysqld --innodb_use_native_aio=0
 
   app:
     container_name: stock-photo-app
