@@ -16,6 +16,7 @@ env:
 
 jobs:
   migration:
+    if: contains(github.event.head_commit.modified, 'database/migration/ddl') || contains(github.event.head_commit.added, 'database/migration/ddl')
     name: Migration
     runs-on: ubuntu-latest
     environment:
