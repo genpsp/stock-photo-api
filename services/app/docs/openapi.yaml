@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  contact: {}
+  description: StockPhoto API ドキュメント
+  title: StockPhoto API Documents
+  version: "1.0"
+paths:
+  /api/images:
+    get:
+      description: アップロードされた画像の一覧を返す
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                items:
+                  $ref: "#/components/schemas/model.Image"
+                type: array
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/echo.HTTPError"
+      summary: 画像一覧取得
+      tags:
+        - images
+  /api/images/upload:
+    post:
+      description: リクエストされた画像をGCSにアップロードする
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  description: 画像タイトル
+                  type: string
+                file:
+                  description: 画像ファイル
+                  type: string
+                  format: binary
+              required:
+                - title
+                - file
+        required: true
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/echo.HTTPError"
+      summary: 画像アップロード
+      tags:
+        - images
+components:
+  schemas:
+    echo.HTTPError:
+      properties:
+        message: {}
+      type: object
+    model.Image:
+      properties:
+        createdAt:
+          type: string
+        id:
+          type: integer
+        title:
+          type: string
+        updatedAt:
+          type: string
+        url:
+          type: string
+      type: object

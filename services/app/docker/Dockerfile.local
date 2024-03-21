@@ -1,0 +1,18 @@
+FROM golang:1.22-bullseye
+
+ENV TZ=Asia/Tokyo
+
+WORKDIR /app
+
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN go install github.com/cosmtrek/air@latest
+RUN go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+RUN go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@latest
+
+COPY stock-photo-test-gcp-key.json ./stock-photo-test-gcp-key.json
+ENV GOOGLE_APPLICATION_CREDENTIALS ./stock-photo-test-gcp-key.json
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+CMD ["air", "-c", "./services/app/docker/.air.toml"]

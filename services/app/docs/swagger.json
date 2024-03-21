@@ -1,0 +1,104 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "StockPhoto API ドキュメント",
+        "title": "StockPhoto API Documents",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/images": {
+            "get": {
+                "description": "アップロードされた画像の一覧を返す",
+                "tags": [
+                    "images"
+                ],
+                "summary": "画像一覧取得",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Image"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/images/upload": {
+            "post": {
+                "description": "リクエストされた画像をGCSにアップロードする",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "images"
+                ],
+                "summary": "画像アップロード",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "画像タイトル",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "画像ファイル",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "echo.HTTPError": {
+            "type": "object",
+            "properties": {
+                "message": {}
+            }
+        },
+        "model.Image": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
